@@ -10,7 +10,6 @@ fetch("http://localhost:3000/api/products/"+ urlId)
     }
   })
   .then((product) => {
-    console.log(product);
     //get title of page
     document.getElementsByTagName("title").innerText = `${product.name}`;
     //get class item__img
