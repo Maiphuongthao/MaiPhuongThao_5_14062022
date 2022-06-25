@@ -35,8 +35,8 @@ cartItems.forEach((cartItem) => {
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
-            <p>Qté : ${cartItem.quantity} </p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+            <p>Qté :  </p>
+            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cartItem.quantity}">
           </div>
           <div class="cart__item__content__settings__delete">
             <p class="deleteItem">Supprimer</p>
