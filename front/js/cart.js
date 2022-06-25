@@ -21,9 +21,8 @@ cartItems.forEach((cartItem) => {
       }
     })
     .then((product) => {
-      console.log(product);
       const items = document.getElementById("cart__items");
-      
+
       html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
       <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -47,8 +46,6 @@ cartItems.forEach((cartItem) => {
     </article>`;
       items.innerHTML = html;
 
-      
-     
       document.getElementById("totalQuantity").innerHTML = totalQuantity +=
         cartItem.quantity;
 
