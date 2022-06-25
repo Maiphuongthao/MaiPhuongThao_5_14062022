@@ -31,13 +31,11 @@ fetch("http://localhost:3000/api/products/" + urlId)
   })
   .catch((err) => {
     // Une erreur est survenue
-    const item = document.getElementsByClassName("item");
+    const item = document.getElementsByClassName("item")[0];
     item.innerText = `Une erreur est survenu (${err})`;
   });
 
 //................Cart button......................
-
-
 
 const addCart = (product) => {
   //get addToCart then listen function of button
@@ -51,31 +49,27 @@ const addCart = (product) => {
     let productArray = {
       _id: product._id,
       quantity: product.quantity,
-      color: product.colors,
+      color: product.color,
     };
     //Check if color or quantity isn't checked
     if (product.quantity <= 0 || product.colors == "") {
+      //entourner le coleur en rouge en cas erreur ajouter 1 if, produit <100
       return;
     }
     //Check if there is anything in local storage and add array of products inside
-    let productTab = JSON.parse(localStorage.getItem("cart"));
-    let cart = [];
-    if (productTab == null) {
-      localStorage.setItem("cart", JSON.stringify(product));
-    } else {
-      return cart;
-    };
-    // Check the product in cart if there is the same
-    for ( let i=0; i < cart.length; i++){
-      if(cart[i]._id === product._id && cart[i].color === product.colo){
-        cart[i].quantity += product.quantity;
-        return;
-      };
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    if (cart == null) {
+      cart = [];
     }
-    
-  });};
-
-  
-
-  
- 
+    //Check if cart already product
+    const productFound = cart.find((item)=>{
+      item._id == productArray._id && item.color == productArray.color;
+    });
+    if(productFound){
+console.log(productFound);
+    }else{
+cart.push(productArray);
+localStorage.setItem("cart", cart);
+    }
+  });
+};
