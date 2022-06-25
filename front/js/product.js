@@ -38,42 +38,48 @@ fetch("http://localhost:3000/api/products/" + urlId)
 //................Cart button......................
 
 const addCart = (product) => {
-  //get addToCart then listen function of button
+  //get addToCart then listen to click
   document.getElementById("addToCart").addEventListener("click", (event) => {
     event.preventDefault();
     //get quantity value
     product.quantity = parseInt(document.getElementById("quantity").value);
     //get color value
     product.color = document.getElementById("colors").value;
-    //array of products
+    //get array of new product
     let productArray = {
       _id: product._id,
       quantity: product.quantity,
       color: product.color,
     };
-    //Check if color or quantity isn't checked
-    if (product.quantity <= 0 && quantity.quantity < 100) {
+    //Check quantity is less than 100 and higher than 0
+    if (product.quantity <= 0 || product.quantity > 100) {
+      alert("Check quantity ( not more than 100)")
       return;
     }
-    //entourner le coleur en rouge en cas erreur ajouter 1 if, produit <100
+    //check color is chosen
     if (product.color == "") {
       document.getElementById("colors").style.color = "red";
+      return;
     }
-    //Check if there is anything in local storage and add array of products inside
+
+    //Get cart to localstorage and return addable if there isn't anything
     let cart = JSON.parse(localStorage.getItem("cart"));
     if (cart == null) {
       cart = [];
     }
-    //Check if cart already product
+    //Function find item id/color & new product array id/ color are the same
     const productFound = cart.find(
       (item) => item._id == productArray._id && item.color == productArray.color
     );
+
+    //If found, change the quantity by adding new chosen quantity
     if (productFound) {
-      console.log(productFound);
       productFound.quantity += productArray.quantity;
-    } else {
+    } //if not add the newproduct to cart
+    else {
       cart.push(productArray);
     }
+    //add cart to local storage
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Produit ajouté au panier");
   });
