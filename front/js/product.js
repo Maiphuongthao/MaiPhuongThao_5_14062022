@@ -44,7 +44,7 @@ const addCart = (product) => {
     //get quantity value
     product.quantity = parseInt(document.getElementById("quantity").value);
     //get color value
-    product.colors = document.getElementById("colors").value;
+    product.color = document.getElementById("colors").value;
     //array of products
     let productArray = {
       _id: product._id,
@@ -52,9 +52,12 @@ const addCart = (product) => {
       color: product.color,
     };
     //Check if color or quantity isn't checked
-    if (product.quantity <= 0 || product.colors == "") {
-      //entourner le coleur en rouge en cas erreur ajouter 1 if, produit <100
+    if (product.quantity <= 0 && quantity.quantity < 100) {
       return;
+    }
+    //entourner le coleur en rouge en cas erreur ajouter 1 if, produit <100
+    if (product.color == "") {
+      document.getElementById("colors").style.color = "red";
     }
     //Check if there is anything in local storage and add array of products inside
     let cart = JSON.parse(localStorage.getItem("cart"));
@@ -62,14 +65,16 @@ const addCart = (product) => {
       cart = [];
     }
     //Check if cart already product
-    const productFound = cart.find((item)=>{
-      item._id == productArray._id && item.color == productArray.color;
-    });
-    if(productFound){
-console.log(productFound);
-    }else{
-cart.push(productArray);
-localStorage.setItem("cart", cart);
+    const productFound = cart.find(
+      (item) => item._id == productArray._id && item.color == productArray.color
+    );
+    if (productFound) {
+      console.log(productFound);
+      productFound.quantity += productArray.quantity;
+    } else {
+      cart.push(productArray);
     }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert("Produit ajouté au panier");
   });
 };
