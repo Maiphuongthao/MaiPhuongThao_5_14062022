@@ -31,7 +31,7 @@ fetch("http://localhost:3000/api/products/" + urlId)
   })
   .catch((err) => {
     // Une erreur est survenue
-    const item = document.getElementById("item");
+    const item = document.getElementsByClassName("item");
     item.innerText = `Une erreur est survenu (${err})`;
   });
 
