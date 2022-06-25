@@ -13,6 +13,10 @@ let cartItems = getCart();
 let html = "";
 let totalPrice = 0;
 let totalQuantity = 0;
+
+if (cartItems ==""){
+    document.getElementById("cart__items").innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`
+}
 cartItems.forEach((cartItem) => {
   fetch(`http://localhost:3000/api/products/${cartItem._id}`)
     .then((res) => {
