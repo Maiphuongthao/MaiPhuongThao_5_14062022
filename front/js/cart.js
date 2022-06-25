@@ -8,15 +8,18 @@ const getCart = () => {
   }
 };
 
-//for each cartItem, get id and the rest
+//Declare variables to avoid loop
 let cartItems = getCart();
 let html = "";
 let totalPrice = 0;
 let totalQuantity = 0;
-
-if (cartItems ==""){
-    document.getElementById("cart__items").innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`
+//Returning message for empty cart
+if (cartItems == "") {
+  document.getElementById(
+    "cart__items"
+  ).innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`;
 }
+//for each cartItem, get id and the rest
 cartItems.forEach((cartItem) => {
   fetch(`http://localhost:3000/api/products/${cartItem._id}`)
     .then((res) => {
@@ -26,7 +29,7 @@ cartItems.forEach((cartItem) => {
     })
     .then((product) => {
       const items = document.getElementById("cart__items");
-
+      //visual of product in cart
       html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
       <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="${product.altTxt}">
@@ -49,7 +52,7 @@ cartItems.forEach((cartItem) => {
       </div>
     </article>`;
       items.innerHTML = html;
-
+      //caculate totalQuantity and totalPrice
       document.getElementById("totalQuantity").innerHTML = totalQuantity +=
         cartItem.quantity;
 
