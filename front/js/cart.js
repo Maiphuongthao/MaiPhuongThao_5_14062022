@@ -10,6 +10,9 @@ const getCart = () => {
 
 //for each cartItem, get id and the rest
 let cartItems = getCart();
+let html = "";
+let totalPrice = 0;
+let totalQuantity = 0;
 cartItems.forEach((cartItem) => {
   fetch(`http://localhost:3000/api/products/${cartItem._id}`)
     .then((res) => {
@@ -17,11 +20,11 @@ cartItems.forEach((cartItem) => {
         return res.json();
       }
     })
-    .then((products) => {
+    .then((product) => {
+      console.log(product);
       const items = document.getElementById("cart__items");
-      let html = "";
-      products.forEach((product) => {
-        html += `<article class="cart__item" data-id="${cartItem._id}" data-color="${cartItem.color}">
+      
+      html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
       <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="${product.altTxt}">
       </div>
@@ -42,20 +45,15 @@ cartItems.forEach((cartItem) => {
         </div>
       </div>
     </article>`;
-      });
       items.innerHTML = html;
 
-      let totalQuantity = 0;
-      let totalPrice = 0;
-      for (carteItem of cartItems) {
-        document.getElementById("totalQuantity").innerHTML = totalQuantity +=
-          cartItem.quantity;
-      }
+      
+     
+      document.getElementById("totalQuantity").innerHTML = totalQuantity +=
+        cartItem.quantity;
 
-      for (carteItem of cartItems) {
-        document.getElementById("totalPrice").innerHTML = totalPrice +=
-          product.price * cartItem.quantity;
-      }
+      document.getElementById("totalPrice").innerHTML = totalPrice +=
+        product.price * cartItem.quantity;
     })
     .catch((err) => {
       // Une erreur est survenue
