@@ -35,35 +35,47 @@ fetch("http://localhost:3000/api/products/" + urlId)
     item.innerText = `Une erreur est survenu (${err})`;
   });
 
-//................Cart bouton......................
+//................Cart button......................
 
-const addCart = (products) => {
+
+
+const addCart = (product) => {
   //get addToCart then listen function of button
   document.getElementById("addToCart").addEventListener("click", (event) => {
     event.preventDefault();
     //get quantity value
-    products.quantity = parseInt(document.getElementById("quantity").value);
+    product.quantity = parseInt(document.getElementById("quantity").value);
     //get color value
-    products.colors = document.getElementById("colors").value;
+    product.colors = document.getElementById("colors").value;
     //array of products
     let productArray = {
-      _id: products._id,
-      quantity: products.quantity,
-      color: products.colors,
+      _id: product._id,
+      quantity: product.quantity,
+      color: product.colors,
     };
     //Check if color or quantity isn't checked
-    if (products.quantity <= 0 || products.colors == "") {
+    if (product.quantity <= 0 || product.colors == "") {
       return;
     }
     //Check if there is anything in local storage and add array of products inside
     let productTab = JSON.parse(localStorage.getItem("cart"));
+    let cart = [];
     if (productTab == null) {
-      let cart = "";
-      localStorage.setItem("cart", JSON.stringify(products));
+      localStorage.setItem("cart", JSON.stringify(product));
+    } else {
+      return cart;
     };
     // Check the product in cart if there is the same
+    for ( let i=0; i < cart.length; i++){
+      if(cart[i]._id === product._id && cart[i].color === product.colo){
+        cart[i].quantity += product.quantity;
+        return;
+      };
+    }
     
   });};
+
+  
 
   
  
