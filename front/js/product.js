@@ -51,16 +51,20 @@ const addCart = (product) => {
       quantity: product.quantity,
       color: product.color,
     };
-    //Check quantity is less than 100 and higher than 0
-    if (product.quantity <= 0 || product.quantity > 100) {
-      alert("Check quantity ( not more than 100)")
-      return;
-    }
+
     //check color is chosen
     if (product.color == "") {
-      document.getElementById("colors").style.color = "red";
+      document.getElementById("colors").style.borderColor = "red";
+      alert("Veuillez choisir une couleur");
       return;
     }
+    //Check quantity is less than 100 and higher than 0
+    if (product.quantity <= 0 || product.quantity > 100) {
+      document.getElementById("quantity").style.borderColor = "red";
+      alert("La quantité doit être supérieure à 0 et inférieure à 100");
+      return;
+    }
+    
 
     //Get cart to localstorage and return addable if there isn't anything
     let cart = JSON.parse(localStorage.getItem("cart"));
