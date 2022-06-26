@@ -2,7 +2,7 @@
 const getCart = () => {
   let cart = localStorage.getItem("cart");
   if (cart == null) {
-    return (cart = []);
+    return [];
   } else {
     return JSON.parse(cart);
   }
@@ -14,7 +14,7 @@ let html = "";
 let totalPrice = 0;
 let totalQuantity = 0;
 //Returning message for empty cart
-if (cartItems == "") {
+if (cartItems.length === 0) {
   document.getElementById(
     "cart__items"
   ).innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`;
