@@ -8,11 +8,10 @@ const getCart = () => {
   }
 };
 
-//Declare variables to avoid loop
+//Declare variables
 let cartItems = getCart();
 let html = "";
-let totalPrice = 0;
-let totalQuantity = 0;
+
 //Returning message for empty cart
 if (cartItems.length === 0) {
   document.getElementById(
@@ -20,18 +19,19 @@ if (cartItems.length === 0) {
   ).innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`;
 }
 //for each cartItem, get id and the rest
-const productsInCart = () => {
-  cartItems.forEach((cartItem) => {
-    fetch(`http://localhost:3000/api/products/${cartItem._id}`)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-      })
-      .then((product) => {
-        const items = document.getElementById("cart__items");
-        //visual of product in cart
-        html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
+
+cartItems.forEach((cartItem) => {
+  fetch(`http://localhost:3000/api/products/${cartItem._id}`)
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((product) => {
+      const items = document.getElementById("cart__items");
+
+      //visual of product in cart
+      html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
       <div class="cart__item__img">
         <img src="${product.imageUrl}" alt="${product.altTxt}">
       </div>
@@ -52,54 +52,81 @@ const productsInCart = () => {
         </div>
       </div>
     </article>`;
-        items.innerHTML = html;
-        //caculate totalQuantity and totalPrice
-        document.getElementById("totalQuantity").innerHTML = totalQuantity +=
-          cartItem.quantity;
+      items.innerHTML = html;
 
+      //appelle update function
+      updateQuantity();
+    })
+    .catch((err) => {
+      // Une erreur est survenue
+      const items = document.getElementById("cart__items");
+      items.innerHTML = `Une erreur est survenu (${err})`;
+    });
+});
+//Caculate quantity
+const caculateQuantity = () => {
+  let totalQuantity = 0;
+  cartItems.forEach((cartItem) => {
+    document.getElementById("totalQuantity").innerHTML = totalQuantity +=
+      cartItem.quantity;
+  });
+};
+caculateQuantity();
+
+//caculate prices
+const caculatePrice = () => {
+  let totalPrice = 0;
+  cartItems.forEach((cartItem) => {
+    fetch(`http://localhost:3000/api/products/${cartItem._id}`)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((product) => {
         document.getElementById("totalPrice").innerHTML = totalPrice +=
           product.price * cartItem.quantity;
       })
       .catch((err) => {
-        // Une erreur est survenue
-        const items = document.getElementById("cart__items");
-        items.innerHTML = `Une erreur est survenu (${err})`;
+        cartItemsElement.innerHTML = `Une erreur est survenue: ${err}`;
       });
   });
 };
-productsInCart(cartItems);
+caculatePrice();
 
 //.............Update & delete product from cart.............
 
 //modify quantity of product
 //Get all ItemQuantity element and set for each of them
-document.querySelectorAll(".itemQuantity").forEach((itemQty) => {
-    console.log("");
-  //listen to each of itemquanity
-  itemQty.addEventListener("change", (event) => {
-    console.log(itemQuantity);
-    event.preventDefault();
-    //find node that match :id cart__items
-    let changedQuantity = itemQty.closest(".cart__items");
-    //Doublecheck if product found in cart has same color & id with product of change
-    const productFound = cartItems.find(
-      (item) =>
-        item._id == changedQuantity.dataset._id && item.color == changedQuantity.dataset.color
-    );
-    if (productFound) {
-    
-      productFound.quantity = parseInt(itemQty.value);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      //caculate totalQuantity and totalPrice
-      document.getElementById("totalQuantity").innerHTML = totalQuantity +=
-        cartItem.quantity;
-      document.getElementById("totalPrice").innerHTML = totalPrice +=
-        product.price * cartItem.quantity;
-    }
+const updateQuantity = () => {
+  const itemQuantities = document.querySelectorAll(".itemQuantity");
+
+  itemQuantities.forEach((itemQty) => {
+    //listen to each of itemquanity
+    itemQty.addEventListener("change", (event) => {
+      event.preventDefault();
+      //find node that match :class cart__item
+      let changeQuantity = itemQty.closest(".cart__item");
+
+      //Doublecheck if products found in cart and set id & color of modified product to the same one
+      console.log(cartItems);
+      const productFound = cartItems.find(
+        (item) =>
+          item._id == changeQuantity.dataset.id &&
+          item.color == changeQuantity.dataset.color
+      );
+      // if it's found in cart, return new number of quantity to value
+      if (productFound) {
+        productFound.quantity = parseInt(itemQty.value);
+        //Add new info to local storage
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        //caculate new totalQuantity and new totalPrice
+        caculateQuantity();
+        caculatePrice();
+      }
+    });
   });
-});
+};
 
 //delete cart
-document.querySelectorAll("deleteItem").forEach((item) => {
-  
-});
+document.querySelectorAll("deleteItem").forEach((item) => {});
