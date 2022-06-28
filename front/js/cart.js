@@ -56,6 +56,7 @@ cartItems.forEach((cartItem) => {
 
       //appelle update function
       updateQuantity();
+      deleteItem();
     })
     .catch((err) => {
       // Une erreur est survenue
@@ -97,10 +98,10 @@ caculatePrice();
 //.............Update & delete product from cart.............
 
 //modify quantity of product
-//Get all ItemQuantity element and set for each of them
-const updateQuantity = () => {
-  const itemQuantities = document.querySelectorAll(".itemQuantity");
 
+const updateQuantity = () => {
+  //Get all ItemQuantity element and set for each of them
+  const itemQuantities = document.querySelectorAll(".itemQuantity");
   itemQuantities.forEach((itemQty) => {
     //listen to each of itemquanity
     itemQty.addEventListener("change", (event) => {
@@ -109,17 +110,17 @@ const updateQuantity = () => {
       let changeQuantity = itemQty.closest(".cart__item");
 
       //Doublecheck if products found in cart and set id & color of modified product to the same one
-      console.log(cartItems);
       const productFound = cartItems.find(
         (item) =>
           item._id == changeQuantity.dataset.id &&
           item.color == changeQuantity.dataset.color
       );
+      console.log("productFound: " + productFound);
       // if it's found in cart, return new number of quantity to value
       if (productFound) {
         productFound.quantity = parseInt(itemQty.value);
         //Add new info to local storage
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        localStorage.setItem("cart", JSON.stringify(cartItems));
         //caculate new totalQuantity and new totalPrice
         caculateQuantity();
         caculatePrice();
@@ -128,5 +129,25 @@ const updateQuantity = () => {
   });
 };
 
-//delete cart
-document.querySelectorAll("deleteItem").forEach((item) => {});
+//delete product from cart
+const deleteItem = () => {
+  //get deleteItem buttons and set function to each of them
+  const deleteButtons = document.querySelectorAll(".deleteItem");
+  deleteButtons.forEach((deleteButton) => {
+    deleteButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      let removeItem = deleteButton.closest(".cart__item");
+      const productFound = cartItems.find(
+        (i) =>
+          i._id == removeItem.dataset.id && i.color == removeItem.dataset.color
+      );
+      if (productFound) {
+        cartItems = cartItems.filter((i) => i !== productFound);
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+        location.reload();
+        caculateQuantity();
+        caculatePrice();
+      }
+    });
+  });
+};
