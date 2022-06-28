@@ -136,17 +136,25 @@ const deleteItem = () => {
   deleteButtons.forEach((deleteButton) => {
     deleteButton.addEventListener("click", (event) => {
       event.preventDefault();
+      //get class cart__item
       let removeItem = deleteButton.closest(".cart__item");
+      //find item which is correspond with actionned item
       const productFound = cartItems.find(
         (i) =>
           i._id == removeItem.dataset.id && i.color == removeItem.dataset.color
       );
+      //if found
       if (productFound) {
+        //keep the rest of objet in array and delete the actionned item
         cartItems = cartItems.filter((i) => i !== productFound);
+        //det new change to local storage
         localStorage.setItem("cart", JSON.stringify(cartItems));
+        //reload auto the page
         location.reload();
+        //caculate new totalQuantity and new totalPrice
         caculateQuantity();
         caculatePrice();
+        
       }
     });
   });
