@@ -1,15 +1,7 @@
-//get cart, check if empty return array, if not read the cart
-const getCart = () => {
-  let cart = localStorage.getItem("cart");
-  if (cart == null) {
-    return [];
-  } else {
-    return JSON.parse(cart);
-  }
-};
+import * as index from "./index.js"
 
 //Declare variables
-let cartItems = getCart();
+let cartItems = index.getCart();
 let html = "";
 
 //Returning message for empty cart
@@ -115,7 +107,7 @@ const updateQuantity = () => {
           item._id == changeQuantity.dataset.id &&
           item.color == changeQuantity.dataset.color
       );
-      console.log("productFound: " + productFound);
+  
       // if it's found in cart, return new number of quantity to value
       if (productFound) {
         productFound.quantity = parseInt(itemQty.value);
