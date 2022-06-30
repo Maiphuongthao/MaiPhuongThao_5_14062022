@@ -1,15 +1,18 @@
-import * as index from "./index.js"
+import * as index from "./index.js";
 
 //Declare variables
 let cartItems = index.getCart();
 let html = "";
 
 //Returning message for empty cart
-if (cartItems.length === 0) {
-  document.getElementById(
-    "cart__items"
-  ).innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`;
+function isEmptyCart() {
+  if (cartItems.length === 0) {
+    document.getElementsByClassName(
+      "cart"
+    )[0].innerHTML = `Votre panier est vide, veuillez choisir les articles de la page <a href="../html/index.html"> Accueil</a>`;
+  }
 }
+isEmptyCart();
 //for each cartItem, get id and the rest
 
 cartItems.forEach((cartItem) => {
@@ -81,7 +84,7 @@ const caculatePrice = () => {
           product.price * cartItem.quantity;
       })
       .catch((err) => {
-        cartItemsElement.innerHTML = `Une erreur est survenue: ${err}`;
+        console.log(err);
       });
   });
 };
@@ -107,7 +110,7 @@ const updateQuantity = () => {
           item._id == changeQuantity.dataset.id &&
           item.color == changeQuantity.dataset.color
       );
-  
+
       // if it's found in cart, return new number of quantity to value
       if (productFound) {
         productFound.quantity = parseInt(itemQty.value);
@@ -142,11 +145,11 @@ const deleteItem = () => {
         //det new change to local storage
         localStorage.setItem("cart", JSON.stringify(cartItems));
         //reload auto the page
-        location.reload();
+        removeItem.remove();
+        isEmptyCart();
         //caculate new totalQuantity and new totalPrice
         caculateQuantity();
         caculatePrice();
-        
       }
     });
   });
