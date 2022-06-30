@@ -1,3 +1,4 @@
+import * as index from "./index.js"
 //Get product's id from url
 const urlId = new URL(window.location).searchParams.get("id");
 
@@ -67,10 +68,7 @@ const addCart = (product) => {
     
 
     //Get cart to localstorage and return addable if there isn't anything
-    let cart = JSON.parse(localStorage.getItem("cart"));
-    if (cart == null) {
-      cart = [];
-    }
+    let cart = index.getCart();
     //Function find item id/color & new product array id/ color are the same
     const productFound = cart.find(
       (item) => item._id == productArray._id && item.color == productArray.color
