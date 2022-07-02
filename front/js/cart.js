@@ -155,37 +155,90 @@ const deleteItem = () => {
   });
 };
 
-
 //.........................Submit form & send order..................
 
-//Declare regex 
+//Declare regex
 const nameRegex = /^[a-zA-Z'-\s]{2,}\s[a-zA-Z'-]{2,}$/; //start from the beginning of string untill the end, accept any name with a length of 2 characters or more, it include multiple name -name with ' - or - -and a space then the 2nd par of the name/ no numbers declared
-const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;//start from the beginning till end,all letters, number, characters like dots & - can be accepted in each part of email address, no space & special characters declared
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //start from the beginning till end,all letters, number, characters like dots & - can be accepted in each part of email address, no space & special characters declared
 const addressRegex = /^[A-Za-z0-9'-\s]{2,50}$/; //all letters & number, characters ' - and space from 0-50 characters
 const villeRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
 
 // Great function to check the regex and return msg
-function formIsValide (input, regex, message){
-let testRegex = regex.test(input.value);
-if(!testRegex ){
-  document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
-  return false;
-}
-else{
-  document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
-  return true;
-}
+function formIsValide(input, regex, message) {
+  let testRegex = regex.test(input.value);
+  if (!testRegex) {
+    document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
+    return false;
+  } else {
+    document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
+    return true;
+  }
 }
 //get parent and messages error
 const form = document.querySelector(".cart__order__form");
-const firstAndLastNameMessage = "Votre saisie n'est pas valide, veuillez saisir au moin 2 caractères. Les numéros ne sont pas acceptés."
-const villeMessgae = "Veuillez saisir votre ville"
-const addressMessage = "Veuillez saisir votre address"
-const emailMessage = "Veuillez saisir votre email correctement. exp: abc@domain.com"
+const firstAndLastNameMessage =
+  "Votre saisie n'est pas valide, veuillez saisir au moin 2 caractères. Les numéros ne sont pas acceptés.";
+const villeMessgae = "Veuillez saisir votre ville";
+const addressMessage = "Veuillez saisir votre address";
+const emailMessage =
+  "Veuillez saisir votre email correctement. exp: abc@domain.com";
 
 //call function to each error
 formIsValide(form.firstName, nameRegex, firstAndLastNameMessage);
 formIsValide(form.lastName, nameRegex, firstAndLastNameMessage);
 formIsValide(form.address, addressRegex, addressMessage);
-formIsValide(form.city, villeRegex,villeMessgae);
+formIsValide(form.city, villeRegex, villeMessgae);
 formIsValide(form.email, emailRegex, emailMessage);
+
+//submit bouton
+document.getElementById("order").addEventListener("submit", (event) => {
+  event.preventDefault();
+  //info of client get from forms
+  let client = {
+    firstName: form.firstName.value,
+    lastName: form.lastName.value,
+    address: form.address.value,
+    ville: form.ville.value,
+    city: form.city.value,
+    email: form.email.value,
+  };
+  //condition is check all forms are correctly fullfilled
+  if (
+    formIsValide(form.firstName, nameRegex, firstAndLastNameMessage) &&
+    formIsValide(form.lastName, nameRegex, firstAndLastNameMessage) &&
+    formIsValide(form.address, addressRegex, addressMessage) &&
+    formIsValide(form.city, villeRegex, villeMessgae) &&
+    formIsValide(form.email, emailRegex, emailMessage)
+  ) {
+    //get array of ids in cart
+    let products = [];
+    c;
+    for (item of cart) {
+      onsole.log(products);
+      products.push(item.id);
+    }
+    //send client info & ids to api by POST
+    fetch(`http://localhost:3000/api/products/order`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ client, products }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        localStorage.setItem("order", JSON.stringify(data));
+        window.location.href = '../confirmation.html';
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    formIsValide(input, regex, message);
+  }
+});
