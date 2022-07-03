@@ -183,10 +183,8 @@ const addressMessage = "Veuillez saisir votre address";
 const emailMessage =
   "Veuillez saisir votre email correctement. exp: abc@domain.com";
 
-
-
 //submit bouton
-form.addEventListener('submit', (event) => {
+form.addEventListener("submit", (event) => {
   debugger;
   event.preventDefault();
   //declare info of client get from forms
@@ -197,12 +195,12 @@ form.addEventListener('submit', (event) => {
     city: form.city.value,
     email: form.email.value,
   };
-  
+
   //get array of ids in cart
-    let products = [];
-    cartItems.forEach((item)=> {
-      products.push(item.id);
-    });
+  let products = [];
+  cartItems.forEach((item) => {
+    products.push(item.id);
+  });
 
   //condition is check all forms are correctly fullfilled
   if (
@@ -212,12 +210,11 @@ form.addEventListener('submit', (event) => {
     formIsValide(form.city, villeRegex, villeMessage) &&
     formIsValide(form.email, emailRegex, emailMessage)
   ) {
-    
     //send client info & ids to serveur by POST
     fetch(`http://localhost:3000/api/products/order`, {
       method: "POST",
       headers: {
-        'Accept': "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ contact, products }),
@@ -229,17 +226,17 @@ form.addEventListener('submit', (event) => {
       })
       .then((data) => {
         localStorage.setItem("order", JSON.stringify(data));
-        window.location.href = '../confirmation.html';
+        window.location.href = `./confirmation.html`;
       })
       .catch((err) => {
         console.log(err);
       });
   } else {
     //call function to each error
-formIsValide(form.firstName, nameRegex, firstAndLastNameMessage);
-formIsValide(form.lastName, nameRegex, firstAndLastNameMessage);
-formIsValide(form.address, addressRegex, addressMessage);
-formIsValide(form.city, villeRegex, villeMessage);
-formIsValide(form.email, emailRegex, emailMessage);
+    formIsValide(form.firstName, nameRegex, firstAndLastNameMessage);
+    formIsValide(form.lastName, nameRegex, firstAndLastNameMessage);
+    formIsValide(form.address, addressRegex, addressMessage);
+    formIsValide(form.city, villeRegex, villeMessage);
+    formIsValide(form.email, emailRegex, emailMessage);
   }
 });
