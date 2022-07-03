@@ -183,7 +183,7 @@ const addressMessage = "Veuillez saisir votre address";
 const emailMessage =
   "Veuillez saisir votre email correctement. exp: abc@domain.com";
 
-//submit bouton
+//submit form
 form.addEventListener("submit", (event) => {
   debugger;
   event.preventDefault();
@@ -224,6 +224,7 @@ form.addEventListener("submit", (event) => {
           return res.json();
         }
       })
+      //add data to local storage and direct to page confirmation
       .then((data) => {
         localStorage.setItem("order", JSON.stringify(data));
         window.location.href = `./confirmation.html`;
@@ -232,7 +233,7 @@ form.addEventListener("submit", (event) => {
         console.log(err);
       });
   } else {
-    //call function to each error
+    //call function to show message errs if forms aren't correctly filled
     formIsValide(form.firstName, nameRegex, firstAndLastNameMessage);
     formIsValide(form.lastName, nameRegex, firstAndLastNameMessage);
     formIsValide(form.address, addressRegex, addressMessage);
