@@ -166,13 +166,12 @@ const cityRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
 //  function to check the regex and return msg
 function checkRegex(input, regex, message) {
   let testRegex = regex.test(input.value);
- 
   if (!testRegex) {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
-    errors = false
+    return false;
   } else {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
-    rerrors = true;
+    return true;
   }
 }
 //get parent and messages error
