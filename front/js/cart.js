@@ -223,10 +223,12 @@ form.addEventListener("submit", (event) => {
           return res.json();
         }
       })
-      //add data to local storage and direct to page confirmation
+      //direct to confirmation page by using orderId, the goal is to show number of order
       .then((data) => {
-        localStorage.setItem("order", JSON.stringify(data));
-        window.location.href = `./confirmation.html`;
+        console.log(data);
+        let orderId = data.orderId;
+        window.location.href =
+          "/front/html/confirmation.html" + "?orderId=" + orderId;
       })
       .catch((err) => {
         console.log(err);
