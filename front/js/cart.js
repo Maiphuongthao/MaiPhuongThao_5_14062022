@@ -161,31 +161,31 @@ const deleteItem = () => {
 const nameRegex = /^[a-zA-ZÀ-ÿ'-\s\]{2,}\s[a-zA-Z'-]{2,}$/; //start from the beginning of string untill the end, accept any name with a length of 2 characters or more, it include multiple name -name with ' - or - -and a space then the 2nd par of the name/ no numbers declared
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //start from the beginning till end,all letters, number, characters like dots & - can be accepted in each part of email address, no space & special characters declared
 const addressRegex = /^[A-Za-zÀ-ÿ0-9'-\s]{2,50}$/; //all letters & number, characters ' - and space from 0-50 characters
-const villeRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
+const cityRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
 
 //  function to check the regex and return msg
-function formIsValide(input, regex, message) {
+function checkRegex(input, regex, message) {
   let testRegex = regex.test(input.value);
+ 
   if (!testRegex) {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
-    return false;
+    errors = false
   } else {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
-    return true;
+    rerrors = true;
   }
 }
 //get parent and messages error
 const form = document.querySelector(".cart__order__form");
 const firstAndLastNameMessage =
   "Votre saisie n'est pas valide, veuillez saisir au moin 2 caractères. Les numéros ne sont pas acceptés.";
-const villeMessage = "Veuillez saisir votre ville";
+const cityMessage = "Veuillez saisir votre ville";
 const addressMessage = "Veuillez saisir votre address";
 const emailMessage =
   "Veuillez saisir votre email correctement. exp: abc@domain.com";
 
 //submit form
 form.addEventListener("submit", (event) => {
-  debugger;
   event.preventDefault();
   //declare info of client get from forms
   let contact = {
@@ -204,11 +204,11 @@ form.addEventListener("submit", (event) => {
 
   //condition is check all forms are correctly fullfilled
   if (
-    formIsValide(form.firstName, nameRegex, firstAndLastNameMessage) &&
-    formIsValide(form.lastName, nameRegex, firstAndLastNameMessage) &&
-    formIsValide(form.address, addressRegex, addressMessage) &&
-    formIsValide(form.city, villeRegex, villeMessage) &&
-    formIsValide(form.email, emailRegex, emailMessage)
+    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage) &&
+    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage) &&
+    checkRegex(form.address, addressRegex, addressMessage) &&
+    checkRegex(form.city, cityRegex, cityMessage) &&
+    checkRegex(form.email, emailRegex, emailMessage)
   ) {
     //send client info & ids to serveur by POST
     fetch(`http://localhost:3000/api/products/order`, {
@@ -234,10 +234,10 @@ form.addEventListener("submit", (event) => {
       });
   } else {
     //call function to show message errs if forms aren't correctly filled
-    formIsValide(form.firstName, nameRegex, firstAndLastNameMessage);
-    formIsValide(form.lastName, nameRegex, firstAndLastNameMessage);
-    formIsValide(form.address, addressRegex, addressMessage);
-    formIsValide(form.city, villeRegex, villeMessage);
-    formIsValide(form.email, emailRegex, emailMessage);
+    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage);
+    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage);
+    checkRegex(form.address, addressRegex, addressMessage);
+    checkRegex(form.city, cityRegex, cityMessage);
+    checkRegex(form.email, emailRegex, emailMessage);
   }
 });
