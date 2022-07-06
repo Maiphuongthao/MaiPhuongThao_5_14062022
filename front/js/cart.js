@@ -154,3 +154,91 @@ const deleteItem = () => {
     });
   });
 };
+
+//.........................Submit form & send order..................
+
+//Declare regex
+const nameRegex = /^[a-zA-ZÀ-ÿ'-\s\]{2,}\s[a-zA-Z'-]{2,}$/; //start from the beginning of string untill the end, accept any name with a length of 2 characters or more, it include multiple name -name with ' - or - -and a space then the 2nd par of the name/ no numbers declared
+const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //start from the beginning till end,all letters, number, characters like dots & - can be accepted in each part of email address, no space & special characters declared
+const addressRegex = /^[A-Za-zÀ-ÿ0-9'-\s]{2,50}$/; //all letters & number, characters ' - and space from 0-50 characters
+const cityRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
+
+//  function to check the regex and return msg
+function checkRegex(input, regex, message) {
+  let testRegex = regex.test(input.value);
+  if (!testRegex) {
+    document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
+    return false;
+  } else {
+    document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
+    return true;
+  }
+}
+//get parent and messages error
+const form = document.querySelector(".cart__order__form");
+const firstAndLastNameMessage =
+  "Votre saisie n'est pas valide, veuillez saisir au moin 2 caractères. Les numéros ne sont pas acceptés.";
+const cityMessage = "Veuillez saisir votre ville";
+const addressMessage = "Veuillez saisir votre address";
+const emailMessage =
+  "Veuillez saisir votre email correctement. exp: abc@domain.com";
+
+//submit form
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  //declare info of client get from forms
+  let contact = {
+    firstName: form.firstName.value,
+    lastName: form.lastName.value,
+    address: form.address.value,
+    city: form.city.value,
+    email: form.email.value,
+  };
+
+  //get array of ids in cart
+  let products = [];
+  cartItems.forEach((item) => {
+    products.push(item.id);
+  });
+
+  //condition is check all forms are correctly fullfilled
+  if (
+    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage) &&
+    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage) &&
+    checkRegex(form.address, addressRegex, addressMessage) &&
+    checkRegex(form.city, cityRegex, cityMessage) &&
+    checkRegex(form.email, emailRegex, emailMessage)
+  ) {
+    //send client info & ids to serveur by POST
+    fetch(`http://localhost:3000/api/products/order`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ contact, products }),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+      })
+      //direct to confirmation page by using orderId, the goal is to show number of order
+      .then((data) => {
+        console.log(data);
+        let orderId = data.orderId;
+        window.location.href =
+          "/front/html/confirmation.html" + "?orderId=" + orderId;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    //call function to show message errs if forms aren't correctly filled
+    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage);
+    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage);
+    checkRegex(form.address, addressRegex, addressMessage);
+    checkRegex(form.city, cityRegex, cityMessage);
+    checkRegex(form.email, emailRegex, emailMessage);
+  }
+});
