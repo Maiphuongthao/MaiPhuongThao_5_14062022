@@ -1,4 +1,4 @@
-import * as index from "./index.js"
+import * as index from "./index.js";
 //Get product's id from url
 const urlId = new URL(window.location).searchParams.get("id");
 
@@ -65,7 +65,6 @@ const addCart = (product) => {
       alert("La quantité doit être supérieure à 0 et inférieure à 100");
       return;
     }
-    
 
     //Get cart to localstorage and return addable if there isn't anything
     let cart = index.getCart();

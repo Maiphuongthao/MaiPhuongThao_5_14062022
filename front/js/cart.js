@@ -229,8 +229,7 @@ form.addEventListener("submit", (event) => {
       //direct to confirmation page by using orderId, the goal is to show number of order
       .then((data) => {
         localStorage.clear();
-        window.location.href =
-          `./confirmation.html?orderId=${data.orderId}`;
+        window.location.href = `./confirmation.html?orderId=${data.orderId}`;
       })
       .catch((err) => {
         console.log(err);
