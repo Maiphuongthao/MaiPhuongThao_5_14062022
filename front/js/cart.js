@@ -163,15 +163,16 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //start fr
 const addressRegex = /^[A-Za-zÀ-ÿ0-9'-\s]{2,50}$/; //all letters & number, characters ' - and space from 0-50 characters
 const cityRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
 
+let errors = false;
+
 //  function to check the regex and return msg
 function checkRegex(input, regex, message) {
   let testRegex = regex.test(input.value);
   if (!testRegex) {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = message;
-    return false;
+    errors = true;
   } else {
     document.getElementById(`${input.id}ErrorMsg`).innerHTML = "";
-    return true;
   }
 }
 //get parent and messages error
@@ -198,17 +199,19 @@ form.addEventListener("submit", (event) => {
   //get array of ids in cart
   let products = [];
   cartItems.forEach((item) => {
-    products.push(item.id);
+    products.push(item._id);
   });
 
+  errors = false;
+  //call function to show message errs if forms aren't correctly filled
+  checkRegex(form.firstName, nameRegex, firstAndLastNameMessage);
+  checkRegex(form.lastName, nameRegex, firstAndLastNameMessage);
+  checkRegex(form.address, addressRegex, addressMessage);
+  checkRegex(form.city, cityRegex, cityMessage);
+  checkRegex(form.email, emailRegex, emailMessage);
+
   //condition is check all forms are correctly fullfilled
-  if (
-    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage) &&
-    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage) &&
-    checkRegex(form.address, addressRegex, addressMessage) &&
-    checkRegex(form.city, cityRegex, cityMessage) &&
-    checkRegex(form.email, emailRegex, emailMessage)
-  ) {
+  if (!errors) {
     //send client info & ids to serveur by POST
     fetch(`http://localhost:3000/api/products/order`, {
       method: "POST",
@@ -225,20 +228,11 @@ form.addEventListener("submit", (event) => {
       })
       //direct to confirmation page by using orderId, the goal is to show number of order
       .then((data) => {
-        console.log(data);
-        let orderId = data.orderId;
         window.location.href =
-          "/front/html/confirmation.html" + "?orderId=" + orderId;
+          `./confirmation.html?orderId=${data.orderId}`;
       })
       .catch((err) => {
         console.log(err);
       });
-  } else {
-    //call function to show message errs if forms aren't correctly filled
-    checkRegex(form.firstName, nameRegex, firstAndLastNameMessage);
-    checkRegex(form.lastName, nameRegex, firstAndLastNameMessage);
-    checkRegex(form.address, addressRegex, addressMessage);
-    checkRegex(form.city, cityRegex, cityMessage);
-    checkRegex(form.email, emailRegex, emailMessage);
   }
 });
