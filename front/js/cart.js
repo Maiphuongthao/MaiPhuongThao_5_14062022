@@ -163,6 +163,7 @@ const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/; //start fr
 const addressRegex = /^[A-Za-zÀ-ÿ0-9'-\s]{2,50}$/; //all letters & number, characters ' - and space from 0-50 characters
 const cityRegex = /^[A-Za-z'0-9'-\s]{2,30}$/;
 
+//declare errors = false
 let errors = false;
 
 //  function to check the regex and return msg
@@ -187,7 +188,7 @@ const emailMessage =
 //submit form
 form.addEventListener("submit", (event) => {
   event.preventDefault();
-  //declare info of client get from forms
+  //declare infos of client get from forms
   let contact = {
     firstName: form.firstName.value,
     lastName: form.lastName.value,
@@ -202,7 +203,9 @@ form.addEventListener("submit", (event) => {
     products.push(item._id);
   });
 
+  //reset errors = false
   errors = false;
+
   //call function to show message errs if forms aren't correctly filled
   checkRegex(form.firstName, nameRegex, firstAndLastNameMessage);
   checkRegex(form.lastName, nameRegex, firstAndLastNameMessage);
