@@ -2,7 +2,6 @@ import * as index from "./index.js";
 
 //Declare variables
 let cartItems = index.getCart();
-let html = "";
 
 //Returning message for empty cart
 function isEmptyCart() {
@@ -24,30 +23,80 @@ cartItems.forEach((cartItem) => {
     })
     .then((product) => {
       const items = document.getElementById("cart__items");
+//create article
+      const article = document.createElement('article');
+    article.classList.add("cart__item");
+    article.setAttribute('data-id', `${product._id}`);
+    article.setAttribute('data-color', `${cartItem.color}`);
+   items.appendChild(article);
 
-      //visual of product in cart
-      html += `<article class="cart__item" data-id="${product._id}" data-color="${cartItem.color}">
-      <div class="cart__item__img">
-        <img src="${product.imageUrl}" alt="${product.altTxt}">
-      </div>
-      <div class="cart__item__content">
-        <div class="cart__item__content__description">
-          <h2>${product.name}</h2>
-          <p>${cartItem.color}</p>
-          <p>${product.price} €</p>
-        </div>
-        <div class="cart__item__content__settings">
-          <div class="cart__item__content__settings__quantity">
-            <p>Qté :  </p>
-            <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${cartItem.quantity}">
-          </div>
-          <div class="cart__item__content__settings__delete">
-            <p class="deleteItem">Supprimer</p>
-          </div>
-        </div>
-      </div>
-    </article>`;
-      items.innerHTML = html;
+//img div
+   const imgDiv = document.createElement('div');
+    imgDiv.classList.add("cart__item__img");
+   article.appendChild(imgDiv);
+
+   const img = document.createElement("img");
+      img.src = `${product.imageUrl}`;
+      img.alt = `${product.altTxt}`;
+      imgDiv.appendChild(img);
+
+      //cart div
+      const cartDiv = document.createElement('div');
+      cartDiv.classList.add("cart__item__content");
+     article.appendChild(cartDiv); 
+
+
+     //description cart div
+     const descriptiontDiv = document.createElement('div');
+      descriptiontDiv.classList.add("cart__item__content__description");
+     cartDiv.appendChild(descriptiontDiv); 
+
+     const h2 = document.createElement("h2");
+      h2.innerText = `${product.name}`;
+      descriptiontDiv.appendChild(h2);
+
+      const p1 = document.createElement("p");
+      p1.innerText = `${cartItem.color}`;
+      descriptiontDiv.appendChild(p1);
+
+      const p2 = document.createElement("p");
+      p2.innerText = `${product.price} €`;
+      descriptiontDiv.appendChild(p2);
+
+
+      //setting cart div
+      const settingDiv = document.createElement('div');
+      settingDiv.classList.add("cart__item__content__settings");
+     cartDiv.appendChild(settingDiv); 
+
+     //quantity inside setting div
+     const quantityDiv = document.createElement('div');
+      quantityDiv.classList.add("cart__item__content__settings__quantity");
+     settingDiv.appendChild(quantityDiv); 
+
+
+     const p3 = document.createElement("p");
+     p3.innerText = "Qté :  ";
+     quantityDiv.appendChild(p3);
+
+     const input = document.createElement("input");
+     input.type = "number";
+     input.classList.add("itemQuantity");
+     input.name = "itemQuantity";
+     input.min = "1";
+     input.max ="100";
+     input.value = `${cartItem.quantity}`;
+     quantityDiv.appendChild(input);
+     
+     //delete div
+     const deleteDiv = document.createElement('div');
+     deleteDiv.classList.add("cart__item__content__settings__delete");
+    settingDiv.appendChild(deleteDiv);
+
+    const p4 = document.createElement("p");
+     p4.classList.add("deleteItem");
+     p4.innerText = "Supprimer";
+     deleteDiv.appendChild(p4);
 
       //appelle update function
       updateQuantity();
