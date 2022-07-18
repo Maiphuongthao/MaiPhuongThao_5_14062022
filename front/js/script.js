@@ -5,18 +5,29 @@ fetch("http://localhost:3000/api/products")
     }
   })
   .then((products) => {
-    const items = document.getElementById("items");
-    let html = "";
     products.forEach((product) => {
-      html += `<a href="./product.html?id=${product._id}">
-       <article>
-         <img src="${product.imageUrl}" alt="${product.altTxt}">
-         <h3 class="productName">${product.name}</h3>
-         <p class="productDescription">${product.description}</p>
-       </article>
-     </a>`;
+      const a = document.createElement("a");
+      a.href = `./product.html?id=${product._id}`;
+      document.getElementById("items").appendChild(a);
+
+      const article = document.createElement("article");
+      a.appendChild(article);
+
+      const img = document.createElement("img");
+      img.src = `${product.imageUrl}`;
+      img.alt = `${product.altTxt}`;
+      article.appendChild(img);
+
+      const h3 = document.createElement("h3");
+      h3.classList.add("productName");
+      h3.innerText = `${product.name}`;
+      article.appendChild(h3);
+
+      const p = document.createElement("p");
+      p.classList.add("productDescription");
+      p.innerText = `${product.description}`;
+      article.appendChild(p);
     });
-    items.innerHTML = html;
   })
   .catch((err) => {
     // Une erreur est survenue

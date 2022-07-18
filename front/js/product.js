@@ -13,9 +13,12 @@ fetch("http://localhost:3000/api/products/" + urlId)
     //get title of page
     document.getElementsByTagName("title").innerText = `${product.name}`;
     //get class item__img
+    const img = document.createElement('img');
+    img.src = `${product.imageUrl}`;
+    img.alt = `${product.altTxt}`;
     document.querySelector(
-      ".item__img"
-    ).innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
+      ".item__img").appendChild(img);
+    
     //get id titile
     document.getElementById("title").innerText = `${product.name}`;
     //get id price
@@ -24,9 +27,10 @@ fetch("http://localhost:3000/api/products/" + urlId)
     document.getElementById("description").innerText = `${product.description}`;
     //get color
     product.colors.forEach((color) => {
-      document.getElementById(
-        "colors"
-      ).innerHTML += `<option value="${color}">${color}</option>`;
+      const colorChoices = document.createElement("option");
+      colorChoices.setAttribute("value", `${color}`);
+      colorChoices.innerText = `${color}`;
+      document.getElementById("colors").appendChild(colorChoices);
     });
     addCart(product);
   })
